@@ -1,0 +1,50 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f0f8ff;
+    margin: 2rem;
+    color: #333;
+  }
+  
+  h1 {
+    color: #00aaff;
+  }
+  
+  form {
+    margin-bottom: 1rem;
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 170, 255, 0.1);
+  }
+  
+  input, button {
+    display: block;
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  button {
+    background-color: #00aaff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  #lista-usuarios li {
+    background-color: white;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-left: 5px solid #00aaff;
+    border-radius: 5px;
+    list-style: none;
+  }
+  
+  .alerta {
+    color: red;
+    font-weight: bold;
+  }
+  

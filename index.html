@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Niniland - Control de Tiempo de Juego</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <h1>🎮 Niniland - Registro de Usuarios</h1>
+
+  <form id="form-registro">
+    <input type="text" id="nombre-nino" placeholder="Nombre del niño" required />
+    <input type="text" id="nombre-padre" placeholder="Nombre del padre" required />
+    <input type="number" id="tiempo-minutos" placeholder="Tiempo (min)" required min="1" />
+    <button type="submit">Registrar</button>
+  </form>
+
+  <h2>Usuarios en juego</h2>
+  <ul id="lista-usuarios"></ul>
+
+  <script src="js/utils.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
