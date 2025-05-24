@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Niniland</string>
+    <string name="title_activity_main">Niniland</string>
+    <string name="package_name">com.victormtmwr.app</string>
+    <string name="custom_url_scheme">com.victormtmwr.app</string>
+</resources>
