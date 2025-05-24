@@ -7,17 +7,43 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <h1>🎮 Niniland - Registro de Usuarios</h1>
+  <!-- Fondo animado de controles de videojuego -->
+  <div class="emoji-bg"></div>
+  <div style="display:flex;justify-content:center;align-items:center;margin-top:1.2em;margin-bottom:0.5em;">
+    <img src="image/logo.png" alt="Niniland Logo" class="logo-niniland">
+  </div>
+  <!-- Botón justo debajo del logo -->
+  <div style="display:flex;justify-content:center;margin-bottom:1em;">
+    <button id="ver-historial-btn" type="button" onclick="window.location.href='../templates/historial.html'">
+      Ver historial de jugadores
+    </button>
+  </div>
+  <h1 style="text-align:center;">🎮 Niniland - Registro de Usuarios</h1>
 
   <form id="form-registro">
     <input type="text" id="nombre-nino" placeholder="Nombre del niño" required />
     <input type="text" id="nombre-padre" placeholder="Nombre del padre" required />
+    <input type="text" id="cedula-padre" placeholder="Cédula del padre" required />
     <input type="number" id="tiempo-minutos" placeholder="Tiempo (min)" required min="1" />
     <button type="submit">Registrar</button>
   </form>
 
   <h2>Usuarios en juego</h2>
   <ul id="lista-usuarios"></ul>
+
+  <hr>
+
+  <div id="modal-tiempo" class="modal" style="display:none;">
+    <div class="modal-content">
+      <p id="modal-mensaje"></p>
+      <input type="number" id="modal-tiempo-extra" placeholder="Minutos extra" min="1" style="display:none;"/>
+      <div id="modal-botones">
+        <button id="modal-agregar">Agregar tiempo</button>
+        <button id="modal-finalizar">Finalizar</button>
+      </div>
+      <div id="modal-cola" style="margin-top:1em;"></div>
+    </div>
+  </div>
 
   <script src="js/utils.js"></script>
   <script src="js/app.js"></script>
