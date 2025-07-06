@@ -51,7 +51,8 @@ if (form && lista) {
       tiempoTotal: tiempoSeg,
       tiempoRestante: tiempoSeg,
       intervalo: null,
-      timestampUltimaActualizacion: Date.now()
+      timestampUltimaActualizacion: Date.now(),
+      precioAcumulado: calcularPrecio(tiempoMin) // Nuevo campo para precio acumulado
     };
 
     usuarios.push(usuario);
@@ -103,6 +104,8 @@ if (form && lista) {
         usuario.tiempoRestante = tiempoExtra * 60;
         usuario.tiempoTotal += tiempoExtra * 60;
         usuario.timestampUltimaActualizacion = Date.now();
+        // Suma el precio del tiempo extra al acumulado
+        usuario.precioAcumulado = (usuario.precioAcumulado || 0) + calcularPrecio(tiempoExtra);
         iniciarTemporizador(usuario);
         renderUsuarios();
         modalActivo = false;
@@ -130,13 +133,15 @@ if (form && lista) {
       }
 
       const tiempoJugado = Math.round((usuario.tiempoTotal - usuario.tiempoRestante) / 60);
-      // Al guardar registro en historial
+      // Usa el precio acumulado
+      const precio = usuario.precioAcumulado || calcularPrecio(tiempoJugado);
       const registro = {
         id: getNextId(),
         nombreNino: usuario.nombreNino,
         nombrePadre: usuario.nombrePadre,
         cedulaPadre: usuario.cedulaPadre,
         tiempoJugado: tiempoJugado,
+        precio: precio,
         fechaHoraFinalizacion: new Date().toLocaleString()
       };
       guardarRegistro(registro);
@@ -153,13 +158,14 @@ if (form && lista) {
     const { usuario, idx } = colaModal.shift();
     mostrarModalAgregarTiempo(usuario, () => {
       const tiempoJugado = Math.round((usuario.tiempoTotal - usuario.tiempoRestante) / 60);
-      // Al guardar registro en historial
+      // Al guardar registro en historial, AGREGA el precio acumulado
       const registro = {
         id: getNextId(),
         nombreNino: usuario.nombreNino,
         nombrePadre: usuario.nombrePadre,
         cedulaPadre: usuario.cedulaPadre,
         tiempoJugado: tiempoJugado,
+        precio: usuario.precioAcumulado || calcularPrecio(tiempoJugado), // <-- agrega esto
         fechaHoraFinalizacion: new Date().toLocaleString()
       };
       guardarRegistro(registro);
@@ -176,10 +182,12 @@ if (form && lista) {
   function renderUsuarios() {
     lista.innerHTML = '';
     usuarios.forEach(usuario => {
+      const minutos = Math.ceil(usuario.tiempoRestante / 60);
       const li = document.createElement('li');
       li.innerHTML = `
         <strong>${usuario.nombreNino}</strong> (Padre: ${usuario.nombrePadre})<br>
         Tiempo restante: <span>${formatTime(usuario.tiempoRestante)}</span><br>
+        <span>Precio: $${(usuario.precioAcumulado || 0).toLocaleString()} COP</span><br>
         <button class="finalizar-tiempo" onclick="finalizarTiempo(${usuario.id})">Finalizar tiempo</button>
       `;
       lista.appendChild(li);
@@ -235,6 +243,7 @@ function renderHistorial(filtro = "") {
     return;
   }
   registros.forEach(registro => {
+    const precio = registro.precio ? `$${registro.precio.toLocaleString()} COP` : 'N/A';
     const li = document.createElement('li');
     li.innerHTML = `
       <strong>ID:</strong> ${registro.id}<br>
@@ -242,6 +251,7 @@ function renderHistorial(filtro = "") {
       <strong>Padre:</strong> ${registro.nombrePadre}<br>
       <strong>Cédula:</strong> ${registro.cedulaPadre || '-'}<br>
       <strong>Tiempo jugado:</strong> ${registro.tiempoJugado} min<br>
+      <strong>Precio:</strong> ${precio}<br>
       <strong>Finalizó:</strong> ${registro.fechaHoraFinalizacion}
     `;
     listaHistorial.appendChild(li);
@@ -288,3 +298,26 @@ if (inputBusqueda) {
   // Crea algunos al cargar
   for (let i = 0; i < 8; i++) setTimeout(createEmoji, i * 350);
 })();
+
+// Solo UNA VEZ estas funciones, NO duplicadas:
+function calcularPrecio(minutos) {
+  if (minutos === 60) return 25000;
+  if (minutos === 30) return 15000;
+  if (minutos === 15) return 10000;
+  // Cálculo proporcional para otros valores
+  return Math.round((minutos / 30) * 25000);
+}
+
+const tiempoInput = document.getElementById('tiempo-minutos');
+const precioDiv = document.getElementById('precio-estimado');
+if (tiempoInput && precioDiv) {
+  tiempoInput.addEventListener('input', function() {
+    const minutos = parseInt(this.value, 10);
+    const precio = calcularPrecio(minutos);
+    if (precio > 0) {
+      precioDiv.textContent = `Precio estimado: $${precio.toLocaleString()} COP`;
+    } else {
+      precioDiv.textContent = '';
+    }
+  });
+}
