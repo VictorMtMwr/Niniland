@@ -321,3 +321,30 @@ if (tiempoInput && precioDiv) {
     }
   });
 }
+
+document.getElementById('exportar-excel-btn')?.addEventListener('click', function() {
+  // Obtiene los registros del historial
+  const registros = JSON.parse(localStorage.getItem('niniland_registros') || '[]');
+  if (registros.length === 0) {
+    alert('No hay registros para exportar.');
+    return;
+  }
+  // Prepara los datos para Excel
+  const datos = registros.map(r => ({
+    ID: r.id,
+    Niño: r.nombreNino,
+    Padre: r.nombrePadre,
+    Cédula: r.cedulaPadre,
+    'Tiempo jugado (min)': r.tiempoJugado,
+    Precio: r.precio,
+    'Finalizó': r.fechaHoraFinalizacion
+  }));
+
+  // Crea la hoja y el libro
+  const ws = XLSX.utils.json_to_sheet(datos);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Historial");
+
+  // Exporta el archivo
+  XLSX.writeFile(wb, "historial_niniland.xlsx");
+});
